@@ -4,10 +4,14 @@ import { Render, TheSetCls } from './set'
 function App() {
   const ref = useRef<HTMLCanvasElement>(null)
   useEffect(() => {
+    ref.current?.getContext("2d") ?.clearRect(0,0,500,500)
     ref.current?.getContext("2d")?.drawImage(new Render(
       {
         sets: [
-          new TheSetCls("A","none"),
+          new TheSetCls("A", "intersection"),
+          new TheSetCls("B", "intersection"),
+          new TheSetCls("C", "union"),
+          new TheSetCls("D", "complement"),
         ]
       }
     ).canvas,0,0)
