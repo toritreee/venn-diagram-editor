@@ -59,36 +59,32 @@ export class Render {
     canvas.width = 500
     canvas.height = 500
     const ctx = canvas.getContext("2d") || (() => { throw new Error("Unknown error") })()
-    let index = 0
     ctx.fillStyle = "red"
     ctx.fillRect(0, 0, 500, 500);
-    [
+    const sets:TheSet[] = [
       ...group.sets.filter(v => v.getType() == "intersection"),
       ...group.sets.filter(v => v.getType() == "union"),
       ...group.sets.filter(v => v.getType() == "complement")
-    ].forEach((v, i) => {
-      console.log(v,i)
-        const image = v.getCanvasFill(250)
-        const r = 360 / group.sets.length * i * Math.PI / 180
-        if ((image.type != "complement" && i == 0) || image.type == "intersection") {
-          ctx.globalCompositeOperation = "source-in"
-        } else if (image.type == "union") {
-          ctx.globalCompositeOperation = "source-over"
-        } else {
-          ctx.globalCompositeOperation = "destination-out"
-        }
-        ctx.drawImage(image.cv, Math.sin(r) * 100 + 250 - 125, Math.cos(r) * 100 + 250 - 125)
-      })
+    ]
+    
+    sets.forEach((v, i) => {
+      const image = v.getCanvasFill(250)
+      const r = 360 / group.sets.length * i * Math.PI / 180
+      ctx.globalCompositeOperation = image.type == "intersection"
+        ? "source-in"
+        : image.type == "union"
+          ? "source-over"
+          : "destination-out"
+      ctx.drawImage(image.cv, Math.sin(r) * 100 + 250 - 125, Math.cos(r) * 100 + 250 - 125)
+    })
 
 
     ctx.globalCompositeOperation = "source-over"
-    index = 0
-    for (const i of group.sets) {
-      const image = i.getCanvasOutline(250)
-      const r = 360 / group.sets.length * index * Math.PI / 180
+    sets.forEach((v,i)=>{
+      const image = v.getCanvasOutline(250)
+      const r = 360 / group.sets.length * i * Math.PI / 180
       ctx.drawImage(image, Math.sin(r) * 100 + 250 - 125, Math.cos(r) * 100 + 250 - 125)
-      index++
-    }
+    })
     this.canvas = canvas
   }
 }
