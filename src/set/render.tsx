@@ -7,7 +7,7 @@ export default function VennDiagram({width,height,render}: {width: number,height
   useEffect(() => {
     ref.current?.getContext("2d")?.clearRect(0, 0, width, height)
     ref.current?.getContext("2d")?.drawImage(render.canvas, 0, 0)
-  }, [render])
+  }, [JSON.stringify(render)])
   return (
     <div>
       <canvas ref={ref} width={width} height={height}></canvas>
